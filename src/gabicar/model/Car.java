@@ -2,6 +2,7 @@ package gabicar.model;
 
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,6 +15,15 @@ public class Car implements DrawableObject {
 	private int speed = 10;
 	private int x = 350;
 	private int y = 600;
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
 	private int width = 0;
 	private int height = 0;
 	private BufferedImage image;
@@ -29,13 +39,31 @@ public class Car implements DrawableObject {
 		}
 	}
 
+	public Car(BufferedImage image) {
+		this.image = image;
+		this.width = this.image.getWidth();
+		this.height = this.image.getHeight();
+	}
+
+	/**
+	 * http://stackoverflow.com/questions/9558981/flip-image-with-graphics2d
+	 * http://stackoverflow.com/questions/9132454/how-to-rotate-a-bufferd-image-
+	 * in-java?lq=1
+	 */
 	@Override
 	public void draw(Graphics2D canvas) {
-		canvas.drawImage(image, null, x, y);
+		AffineTransformOp operation = null;
+		if (!isPlayer) {
+			AffineTransform transform = AffineTransform.getScaleInstance(1, -1);
+			transform.translate(0, -height);
+			operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+		}
+
+		canvas.drawImage(image, operation, x, y);
 	}
 
 	public void move() {
-
+		y = y + speed;
 	}
 
 	public void up() {
@@ -69,6 +97,30 @@ public class Car implements DrawableObject {
 
 	public void setPlayer(boolean isPlayer) {
 		this.isPlayer = isPlayer;
+	}
+
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
 	}
 
 }

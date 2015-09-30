@@ -4,7 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import gabicar.model.Car;
@@ -21,23 +25,54 @@ public class Painter extends Thread {
 	private Graphics2D canvas;
 
 	private Game game;
-	
+
 	private static Painter painter;
+
+	private ArrayList<BufferedImage> images = new ArrayList<BufferedImage>();
 
 	public Painter(JFrame frame) {
 		painter = this;
-		
+
 		this.frame = frame;
 		this.buffer = new BufferedImage(500, 700, BufferedImage.TYPE_4BYTE_ABGR);
 		this.canvas = buffer.createGraphics();
-		this.game = new Game();
+		this.game = new Game(this);
 		this.game.getObjects().add(new Road());
-		this.game.getObjects().add(new Info());
+		
+		try {
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_Anonymous-BMW-Z4-top-view.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_car-topview-2.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_car-topview-3.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_car-topview.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_glibersat-Nioubiteul.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_glibersat-Pigeau.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_glibersat-Sapuar.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_simple-travel-car-top-view.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleBlueCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleBrightGreenCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleDarkBlueCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleGreenCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleOrangeCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimplePinkCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimplePurpleCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleTurquoiseCarTopView.png"));
+			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleYellowCarTopView.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		Car player = new Car("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleBrightGreenCarTopView.png");
 		player.setPlayer(true);
 		this.game.getObjects().add(player);
+		
+		this.game.getObjects().add(new Info());
 
+	}
+
+	public BufferedImage load(String fileName) throws IOException {
+		File file = new File(fileName);
+		return ImageIO.read(file);
 	}
 
 	public static Painter getPainter() {
@@ -67,4 +102,9 @@ public class Painter extends Thread {
 	public Game getGame() {
 		return game;
 	}
+
+	public ArrayList<BufferedImage> getImages() {
+		return images;
+	}
+
 }
