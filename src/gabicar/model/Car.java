@@ -21,7 +21,9 @@ public class Car implements DrawableObject {
 	public Car(String fileName) {
 		try {
 			File file = new File(fileName);
-			image = ImageIO.read(file);
+			this.image = ImageIO.read(file);
+			this.width = this.image.getWidth();
+			this.height = this.image.getHeight();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -37,19 +39,28 @@ public class Car implements DrawableObject {
 	}
 
 	public void up() {
-		y = y - speed;
+		if (y - speed >= 700 / 2) {
+			y = y - speed;
+		}
 	}
 
 	public void down() {
-		y = y + speed;
+		if (y + speed <= 700 - height) {
+			y = y + speed;
+		}
+
 	}
 
 	public void left() {
-		x = x - speed;
+		if (x - speed >= 0) {
+			x = x - speed;
+		}
 	}
 
 	public void right() {
-		x = x + speed;
+		if (x + speed <= 500 - width) {
+			x = x + speed;
+		}
 	}
 
 	public boolean isPlayer() {
@@ -59,6 +70,5 @@ public class Car implements DrawableObject {
 	public void setPlayer(boolean isPlayer) {
 		this.isPlayer = isPlayer;
 	}
-	
-	
+
 }

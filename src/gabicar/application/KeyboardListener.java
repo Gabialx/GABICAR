@@ -7,6 +7,10 @@ import gabicar.model.Car;
 import gabicar.model.Game;
 
 public class KeyboardListener implements KeyListener {
+	
+	/**
+	 * http://docs.oracle.com/javase/7/docs/api/java/awt/event/KeyEvent.html
+	 */
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		Car player = Painter.getPainter().getGame().getPlayer();
