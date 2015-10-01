@@ -14,22 +14,43 @@ public class Game implements DrawableObject {
 
 	private Painter painter;
 
+	private boolean crashed;
+
+	private int score = 0;
+	private int best = 0;
+
 	public Game(Painter painter) {
 		this.painter = painter;
 	}
 
 	@Override
 	public void draw(Graphics2D canvas) {
-		int top = getTop();
-		if (top > 100 || top == Integer.MAX_VALUE) {
-			newCars();
-		}
+		synchronized (this) {
+			int top = getTop();
+			if (top > 100 || top == Integer.MAX_VALUE) {
+				newCars();
+			}
 
-		moveCars();
-		removeCars();
+			moveCars();
+			removeCars();
 
-		for (DrawableObject drawableObject : objects) {
-			drawableObject.draw(canvas);
+			if (!crashed) {
+				crashed = isCrashed();
+			} else {
+				objects.clear();
+				if (this.best < this.score) {
+					this.best = this.score;
+				}
+
+				Score score = new Score();
+				score.setScore(this.score);
+				score.setBest(this.best);
+				objects.add(score);
+			}
+
+			for (DrawableObject drawableObject : objects) {
+				drawableObject.draw(canvas);
+			}
 		}
 	}
 
@@ -97,7 +118,45 @@ public class Game implements DrawableObject {
 				Car car = (Car) drawableObject;
 				if (!car.isPlayer() && car.getY() > 700) {
 					iterator.remove();
+					score++;
 				}
+			}
+		}
+	}
+
+	public boolean isCrashed() {
+		Car player = getPlayer();
+		if (player != null) {
+			for (DrawableObject drawableObject : objects) {
+				if (drawableObject instanceof Car) {
+					Car car = (Car) drawableObject;
+					if (!car.isPlayer() && player.intersects(car)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public void init() {
+		objects.add(new Road());
+		
+		Car player = new Car("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleBrightGreenCarTopView.png");
+		player.setPlayer(true);
+		objects.add(player);
+
+		objects.add(new Info());
+	}
+
+	public void reinitialize() {
+		synchronized (this) {
+			if (crashed) {
+				objects.clear();
+				init();
+
+				score = 0;
+				crashed = false;
 			}
 		}
 	}

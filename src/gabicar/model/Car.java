@@ -1,6 +1,7 @@
 package gabicar.model;
 
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -89,6 +90,13 @@ public class Car implements DrawableObject {
 		if (x + speed <= 500 - width) {
 			x = x + speed;
 		}
+	}
+
+	public boolean intersects(Car car) {
+		Rectangle r1 = new Rectangle(x, y, width, height);
+		Rectangle r2 = new Rectangle(car.getX(), car.getY(), car.getWidth(), car.getHeight());
+
+		return r1.intersects(r2);
 	}
 
 	public boolean isPlayer() {

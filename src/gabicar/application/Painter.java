@@ -37,7 +37,7 @@ public class Painter extends Thread {
 		this.buffer = new BufferedImage(500, 700, BufferedImage.TYPE_4BYTE_ABGR);
 		this.canvas = buffer.createGraphics();
 		this.game = new Game(this);
-		this.game.getObjects().add(new Road());
+		
 		
 		try {
 			images.add(load("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_Anonymous-BMW-Z4-top-view.png"));
@@ -61,13 +61,8 @@ public class Painter extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		Car player = new Car("D:\\Workspace\\GABICAR\\src\\gabicar\\resources\\32px_SimpleBrightGreenCarTopView.png");
-		player.setPlayer(true);
-		this.game.getObjects().add(player);
 		
-		this.game.getObjects().add(new Info());
-
+		game.init();
 	}
 
 	public BufferedImage load(String fileName) throws IOException {
